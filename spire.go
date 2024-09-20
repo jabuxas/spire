@@ -15,6 +15,7 @@ var GAME_LOCATION = os.Getenv("GAME_PATH")
 
 func main() {
 	getCache()
+	installBepinex()
 }
 
 func getCache() error {
@@ -33,15 +34,13 @@ func getCache() error {
 	return nil
 }
 
-func installBepinex() error {
+func installBepinex() {
 	_, err := os.Stat(GAME_LOCATION + "/BepInEx")
 
 	if err != nil {
 		// install bepinex
-
+		DownloadBepinex()
 	} else {
-		// bepinex already installed
+		fmt.Print("bepinex already installed")
 	}
-
-	return nil
 }
