@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func DownloadCache() error {
@@ -51,7 +52,7 @@ func DownloadBepinex() error {
 		return fmt.Errorf("could not save file: %w", err)
 	}
 
-	err = unzip(tmpPath, GAME_LOCATION)
+	err = unzip(tmpPath, GAME_PATH)
 	if err != nil {
 		return fmt.Errorf("could not extract BepInEx: %w", err)
 	}
@@ -97,6 +98,16 @@ func unzip(src, dest string) error {
 		if err != nil {
 			return err
 		}
+	}
+	return nil
+}
+
+func SanitizeInput(input *string) error {
+	if *input == "" {
+		return fmt.Errorf("%s is not set", *input)
+	}
+	if strings.HasSuffix(*input, "/") {
+		*input = strings.TrimSuffix(*input, "/")
 	}
 	return nil
 }

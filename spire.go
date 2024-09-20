@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"time"
 )
@@ -11,10 +12,13 @@ const (
 	PAYLOAD = TMPDIR + "/payload.json"
 )
 
-var GAME_LOCATION = os.Getenv("GAME_PATH")
+var GAME_PATH = os.Getenv("GAME_PATH")
 
 func main() {
 	getCache()
+	if err := SanitizeInput(&GAME_PATH); err != nil {
+		log.Fatal("GAME_PATH is not set")
+	}
 	installBepinex()
 }
 
@@ -35,12 +39,12 @@ func getCache() error {
 }
 
 func installBepinex() {
-	_, err := os.Stat(GAME_LOCATION + "/BepInEx")
+	_, err := os.Stat(GAME_PATH + "/BepInEx")
 
 	if err != nil {
 		// install bepinex
 		DownloadBepinex()
 	} else {
-		fmt.Print("bepinex already installed")
+		fmt.Println("bepinex already installed")
 	}
 }
