@@ -2,9 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
-	"log"
-	"net/http"
 	"os"
 	"time"
 )
@@ -14,18 +11,21 @@ const (
 	PAYLOAD = TMPDIR + "/payload.json"
 )
 
+var GAME_LOCATION = os.Getenv("GAME_PATH")
+
 func main() {
-	get_cache()
+	getCache()
 }
 
-func get_cache() error {
+func getCache() error {
 	info, err := os.Stat(PAYLOAD)
 
 	if err != nil {
 		fmt.Println("payload isn't accessible, requesting")
-		download_cache()
+		DownloadCache()
 	} else if !(info.ModTime().After(time.Now().Add(-2 * time.Hour))) {
-		download_cache()
+		// download again if payload is older than 2 hours
+		DownloadCache()
 	} else {
 		fmt.Println("payload was updated recently, won't update")
 	}
@@ -33,28 +33,14 @@ func get_cache() error {
 	return nil
 }
 
-func download_cache() error {
-	resp, err := http.Get("https://thunderstore.io/api/v1/package/")
-	if err != nil {
-		log.Fatal("couldn't download thunderstore payload")
-		return err
-	}
-	defer resp.Body.Close()
+func installBepinex() error {
+	_, err := os.Stat(GAME_LOCATION + "/BepInEx")
 
-	if err := os.MkdirAll(TMPDIR, os.ModePerm); err != nil {
-		log.Fatal("couldn't create tmpdir")
-		return err
-	}
-	out, err := os.Create(PAYLOAD)
 	if err != nil {
-		log.Fatal("couldn't create payload file")
-		return err
-	}
-	defer out.Close()
+		// install bepinex
 
-	if _, err := io.Copy(out, resp.Body); err != nil {
-		log.Fatal("couldn't write to payload file")
-		return err
+	} else {
+		// bepinex already installed
 	}
 
 	return nil
