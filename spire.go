@@ -9,8 +9,10 @@ import (
 	"time"
 )
 
-const TMPDIR = "/tmp/spire"
-const PAYLOAD = TMPDIR + "/payload.json"
+const (
+	TMPDIR  = "/tmp/spire"
+	PAYLOAD = TMPDIR + "/payload.json"
+)
 
 func main() {
 	get_cache()
