@@ -37,9 +37,7 @@ func getCache() error {
 }
 
 func installBepinex() {
-	_, err := os.Stat(GAME_PATH + "/BepInEx")
-
-	if err != nil {
+	if _, err := os.Stat(GAME_PATH + "/BepInEx"); err != nil {
 		// install bepinex
 		DownloadBepinex()
 	}

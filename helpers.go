@@ -38,7 +38,9 @@ func DownloadBepinex() error {
 
 	// download only if it doesnt exist
 	if _, err := os.Stat(tmpPath); err != nil {
-		resp, err := http.Get("https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.2/BepInEx_win_x64_5.4.23.2.zip")
+		resp, err := http.Get(
+			"https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.2/BepInEx_win_x64_5.4.23.2.zip",
+		)
 		if err != nil {
 			return fmt.Errorf("could not download bepinex: %w", err)
 		}
