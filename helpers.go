@@ -34,35 +34,37 @@ func DownloadCache() error {
 }
 
 func DownloadBepinex() error {
-	tmpPath := TMPDIR + "/bepinex.zip"
+	if _, err := os.Stat(GAME_PATH + "/BepInEx"); err != nil {
+		tmpPath := TMPDIR + "/bepinex.zip"
 
-	// download only if it doesnt exist
-	if _, err := os.Stat(tmpPath); err != nil {
-		resp, err := http.Get(
-			"https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.2/BepInEx_win_x64_5.4.23.2.zip",
-		)
-		if err != nil {
-			return fmt.Errorf("could not download bepinex: %w", err)
-		}
-		defer resp.Body.Close()
+		// download only if it doesnt exist
+		if _, err := os.Stat(tmpPath); err != nil {
+			resp, err := http.Get(
+				"https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.2/BepInEx_win_x64_5.4.23.2.zip",
+			)
+			if err != nil {
+				return fmt.Errorf("could not download bepinex: %w", err)
+			}
+			defer resp.Body.Close()
 
-		out, err := os.Create(tmpPath)
-		if err != nil {
-			return fmt.Errorf("could not create file: %w", err)
-		}
-		defer out.Close()
+			out, err := os.Create(tmpPath)
+			if err != nil {
+				return fmt.Errorf("could not create file: %w", err)
+			}
+			defer out.Close()
 
-		_, err = io.Copy(out, resp.Body)
-		if err != nil {
-			return fmt.Errorf("could not save file: %w", err)
+			_, err = io.Copy(out, resp.Body)
+			if err != nil {
+				return fmt.Errorf("could not save file: %w", err)
+			}
 		}
+
+		err := unzip(tmpPath, GAME_PATH)
+		if err != nil {
+			return fmt.Errorf("could not extract BepInEx: %w", err)
+		}
+
 	}
-
-	err := unzip(tmpPath, GAME_PATH)
-	if err != nil {
-		return fmt.Errorf("could not extract BepInEx: %w", err)
-	}
-
 	return nil
 }
 

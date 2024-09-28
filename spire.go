@@ -18,7 +18,7 @@ func main() {
 	if err := SanitizeInput(&GAME_PATH); err != nil {
 		log.Fatal("GAME_PATH is not set")
 	}
-	installBepinex()
+	DownloadBepinex()
 }
 
 func getCache() error {
@@ -34,12 +34,4 @@ func getCache() error {
 	// else payload was updated recently, won't update
 
 	return nil
-}
-
-func installBepinex() {
-	if _, err := os.Stat(GAME_PATH + "/BepInEx"); err != nil {
-		// install bepinex
-		DownloadBepinex()
-	}
-	// else bepinex already installed
 }
